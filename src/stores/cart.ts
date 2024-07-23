@@ -3,8 +3,8 @@ import { computed, map } from 'nanostores';
 export const $cart = map<Record<number, CartItem>>({});
 
 export function addItemToCart(item: ShopItem) {
-	const cartItemt = $cart.get()[item.id];
-	const quantity = cartItemt ? cartItemt.quantity : 0;
+	const cartItem = $cart.get()[item.id];
+	const quantity = cartItem ? cartItem.quantity : 0;
 
 	$cart.setKey(item.id, {
 		item,
@@ -13,15 +13,19 @@ export function addItemToCart(item: ShopItem) {
 }
 
 export function removeItemFromCart(itemId: number) {
-	//@ts-ignore -- we’re deleting the entry, so don’t worry about the type
+	// @ts-ignore -- we’re deleting the entry, so don’t worry about the type
 	$cart.setKey(itemId, undefined);
 }
 
 export const subtotal = computed($cart, (entries) => {
 	let subtotal = 0;
 	Object.values(entries).forEach((entry) => {
-		if (!entry) return;
+		if (!entry) {
+			return;
+		}
 
-		subtotal += entry.item.price * entry.quantity;
+		subtotal += entry.quantity * entry.item.price;
 	});
+
+	return subtotal;
 });

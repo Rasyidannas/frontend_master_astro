@@ -5,7 +5,7 @@ import { Show, createSignal } from 'solid-js';
 
 function formatCurrency(amount: number) {
 	return new Intl.NumberFormat('en-US', {
-		currency: 'USD',
+		currency: 'usd',
 		style: 'currency',
 	}).format(amount);
 }
@@ -19,7 +19,7 @@ const EmptyState = () => {
 				</span>
 			</p>
 			<p class={styles.empty}>
-				Your cart is empty! Add a sandwich kit or two and give flavor to chance.
+				Your cart is empty! Add a sandwich kit or two and give flavor a chance.
 			</p>
 		</>
 	);
@@ -40,12 +40,14 @@ export const Cart = () => {
 			<Show when={Object.values($cart()).length > 0} fallback={<EmptyState />}>
 				<ul class={styles.items}>
 					{Object.values($cart()).map((entry: CartItem) => {
-						if (!entry.item) return null;
+						if (!entry) {
+							return null;
+						}
 
 						return (
 							<li class={styles.item}>
-								<span style={styles.quantity}>{entry.quantity}</span>
-								<span style={styles.name}>{entry.item.title}</span>
+								<span class={styles.quantity}>{entry.quantity}</span>
+								<span class={styles.name}>{entry.item.title}</span>
 								<span class={styles.remove}>
 									<button
 										title="remove item"
@@ -54,26 +56,26 @@ export const Cart = () => {
 										&times;
 									</button>
 								</span>
-								<span style={styles.price}>{entry.item.price}</span>
+								<span class={styles.price}>
+									{formatCurrency(entry.item.price)}
+								</span>
 							</li>
 						);
 					})}
 				</ul>
 
-				<div class={styles.detail}>
+				<div class={styles.details}>
 					<p class={styles.subtotal}>
 						<span class={styles.label}>Subtotal:</span>{' '}
 						{formatCurrency($subtotal())}
 					</p>
-
 					<p class={styles.shipping}>
-						<span class={styles.label}>Shipping:</span>[' ']
+						<span class={styles.label}>Shipping:</span>
 						<del>$10.00</del>
 						<ins>FREE</ins>
 					</p>
-
-					<p class={styles.subtotal}>
-						<span class={styles.label}>Total:</span>[' ']
+					<p class={styles.total}>
+						<span class={styles.label}>Total:</span>{' '}
 						{formatCurrency($subtotal())}
 					</p>
 
