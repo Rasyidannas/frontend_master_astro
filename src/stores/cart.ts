@@ -13,7 +13,7 @@ export function addItemToCart(item: ShopItem) {
 }
 
 export function removeItemFromCart(itemId: number) {
-	//ts-ignore
+	//@ts-ignore -- we’re deleting the entry, so don’t worry about the type
 	$cart.setKey(itemId, undefined);
 }
 
